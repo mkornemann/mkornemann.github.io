@@ -1,0 +1,168 @@
+/* ==========================================================================
+   Stylesheet for the job-market website.
+   Colours are set once at the top; everything else uses them.
+   Dark mode is the default. The switch in the top bar is a checkbox (#light):
+   when it is ticked, the light colours below take over. No JavaScript.
+   ========================================================================== */
+
+/* ---------- Colours: dark (default) ---------- */
+:root {
+  color-scheme: dark;
+  --bg: #1e1f24;       /* intro block */
+  --bg-alt: #25272d;   /* research blocks */
+  --ink: #e3e3e6;      /* main text */
+  --muted: #a2a5ad;    /* secondary text (coauthors) */
+  --accent: #8ab4f8;   /* links */
+  --line: #34363d;     /* thin lines */
+}
+
+/* ---------- Colours: light (when the switch is on) ---------- */
+:root:has(#light:checked) {
+  color-scheme: light;
+  --bg: #ffffff;
+  --bg-alt: #f7f7f7;
+  --ink: #2b2b2b;
+  --muted: #6b6b6b;
+  --accent: #1565c0;
+  --line: #e3e3e3;
+}
+
+/* ---------- Fonts: stored in assets/fonts, no request to Google ----------
+   Each file covers both weights (normal and bold). The "-ext" files hold
+   extra letters such as ő and are only downloaded when a page needs them. */
+@font-face {
+  font-family: "Lora"; font-weight: 400 700; font-display: swap;
+  src: url("assets/fonts/lora-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Lora"; font-weight: 400 700; font-display: swap;
+  src: url("assets/fonts/lora-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Roboto"; font-weight: 400 700; font-display: swap;
+  src: url("assets/fonts/roboto-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Roboto"; font-weight: 400 700; font-display: swap;
+  src: url("assets/fonts/roboto-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* ---------- Basics ---------- */
+* { box-sizing: border-box; }
+
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
+body {
+  margin: 0;
+  background: var(--bg-alt);   /* matches the last block if the screen is taller than the page */
+  color: var(--ink);
+  font-family: "Roboto", system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+h1, h2, h3, .topbar a { font-family: "Lora", Georgia, serif; }
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+a:focus-visible, #light:focus-visible + label { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+.wrap { max-width: 70rem; margin: 0 auto; padding: 0 1.5rem; }
+
+/* Hidden on screen but still read aloud by screen readers */
+.vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* "Skip to content" link, visible only when reached with the keyboard */
+.skip { position: absolute; left: -999px; }
+.skip:focus { left: 1rem; top: 1rem; z-index: 20; background: var(--bg); padding: .3rem .6rem; }
+
+/* ---------- Top bar: Home, Research, CV and the theme switch ---------- */
+.topbar {
+  position: sticky; top: 0; z-index: 10;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+}
+.bar { display: flex; align-items: center; min-height: 3.5rem; }
+.topbar ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 1.8rem; }
+.topbar a { color: var(--ink); }
+.topbar a:hover { color: var(--accent); text-decoration: none; }
+
+.theme-slot { margin-left: auto; }
+.toggle {
+  display: grid; place-items: center;
+  width: 2.2rem; height: 2.2rem; border-radius: 50%;
+  color: var(--muted); cursor: pointer;
+}
+.toggle:hover { color: var(--ink); }
+.toggle svg { width: 18px; height: 18px; }
+/* Show the sun in dark mode (click for light), the moon in light mode */
+.to-dark { display: none; }
+:root:has(#light:checked) .to-light { display: none; }
+:root:has(#light:checked) .to-dark { display: block; }
+
+/* ---------- Blocks: full-width bands of colour ---------- */
+.block { padding: 3.75rem 0; background: var(--bg); scroll-margin-top: 3.5rem; }
+.block.alt { background: var(--bg-alt); }
+/* Working Papers follows Job Market Paper in the same colour; a thin line separates them */
+.block.alt + .block.alt { padding-top: 0; }
+.block.alt + .block.alt .section-title { border-top: 1px solid var(--line); padding-top: 3rem; }
+
+.section-title { font-size: 2.1rem; font-weight: 400; line-height: 1.2; margin: 0 0 2.2rem; }
+
+/* Two columns used by every block: narrow on the left, wide on the right */
+.grid { display: grid; grid-template-columns: 17rem 1fr; column-gap: 4rem; }
+
+/* ---------- Intro: photo and name left, welcome text right ---------- */
+.id { text-align: center; }
+.photo {
+  display: block;
+  width: 220px; height: 220px; margin: 0 auto 1.2rem;
+  border-radius: 50%; object-fit: cover;
+}
+h1 { font-size: 1.9rem; font-weight: 400; margin: 0; }
+
+.welcome h2 { font-size: 1.6rem; font-weight: 400; margin: 0 0 1rem; }
+.welcome p { margin: 0 0 1rem; max-width: 42rem; }
+.welcome hr { max-width: 42rem; margin: 1.6rem 0; border: 0; border-top: 1px solid var(--line); }
+
+/* ---------- Papers: title, coauthors, PDF left; abstract right ---------- */
+.paper + .paper { margin-top: 2.8rem; }
+.paper h3 { font-size: 1.2rem; font-weight: 700; line-height: 1.4; margin: 0 0 .5rem; }
+.jmp h3 { font-size: 1.4rem; }
+.meta p { margin: 0 0 .35rem; font-size: .92rem; color: var(--muted); }
+.abstract { margin: 0; max-width: 44rem; }
+
+/* Small outlined PDF buttons */
+.tag {
+  display: inline-block; margin-top: .5rem; padding: .15rem .6rem;
+  border: 1px solid var(--accent); border-radius: 3px; font-size: .88rem;
+}
+.tag:hover { background: var(--accent); color: var(--bg); text-decoration: none; }
+
+/* ---------- Phones: everything stacks ---------- */
+@media (max-width: 760px) {
+  .wrap { padding: 0 1.25rem; }
+  .block { padding: 2.8rem 0; }
+  .grid { grid-template-columns: 1fr; row-gap: 1rem; }
+  .photo { width: 150px; height: 150px; }
+  .id { margin-bottom: 1.2rem; }
+  h1 { font-size: 1.6rem; }
+  .section-title { font-size: 1.7rem; margin-bottom: 1.4rem; }
+  .block.alt + .block.alt .section-title { padding-top: 2.2rem; }
+  .jmp h3 { font-size: 1.25rem; }
+}
+
+/* ---------- Printing: always light colours, no top bar ---------- */
+@media print {
+  :root, :root:has(#light:checked) {
+    --bg: #fff; --bg-alt: #fff; --ink: #000; --muted: #444; --accent: #000; --line: #ccc;
+  }
+  .topbar { display: none; }
+  .block { padding: 1.5rem 0; }
+}
