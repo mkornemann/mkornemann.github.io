@@ -5,8 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Malte Kornemann</title>
 <meta name="description" content="Malte Kornemann — PhD candidate in Economics at the University of Bonn, working in behavioral economics and microeconomic theory. On the 2026–2027 job market.">
-<!-- TEST ONLY: asks search engines not to list this page. Delete this line before the real launch. -->
-<meta name="robots" content="noindex, nofollow">
 <!-- The number after "?v=" goes up with every change to style.css, so browsers load the new version instead of an old saved copy -->
 <link rel="stylesheet" href="style.css?v=2">
 </head>
@@ -63,15 +61,17 @@
       <h2 id="jmp-heading" class="section-title">Job Market Paper</h2>
 
       <article class="paper jmp grid">
-        <!-- Phones only: the "Abstract" button below ticks this hidden box, which opens the abstract (see style.css) -->
-        <input type="checkbox" id="abs-jmp" class="vh abs-toggle">
+        <!-- When the abstract is ready, put back (as for the working papers):
+             above <div class="meta">:  <input type="checkbox" id="abs-jmp" class="vh abs-toggle">
+             after the PDF button:      <label for="abs-jmp" class="tag abs-btn">Abstract<span class="arrow" aria-hidden="true"></span></label>
+             after </div>:              <p class="abstract">ABSTRACT TEXT</p> -->
         <div class="meta">
-          <h3>Adaptation to Aggregation Errors in Multi-attribute Choice</h3>
+          <h3>Adaptation to Aggregation Errors in Multi-Attribute Choice</h3>
           <p>with Philipp Schirmer</p>
-          <a class="tag" href="assets/[JMP PDF]" target="_blank" rel="noopener">Download Paper (PDF)</a>
-          <label for="abs-jmp" class="tag abs-btn">Abstract<span class="arrow" aria-hidden="true"></span></label>
+          <!-- When the JMP PDF is in assets/, replace the next line with:
+               <a class="tag" href="assets/FILE-NAME.pdf" target="_blank" rel="noopener">Download Paper (PDF)</a> -->
+          <p>Draft coming soon</p>
         </div>
-        <p class="abstract">[JMP ABSTRACT]</p>
       </article>
     </div>
   </section>
