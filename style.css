@@ -1,11 +1,13 @@
 /* ==========================================================================
    Stylesheet for the job-market website.
-   Colours are set once at the top; everything else uses them.
-   Dark mode is the default. The switch in the top bar is a checkbox (#light):
-   when it is ticked, the light colours below take over. No JavaScript.
+   Colours are set at the top; everything else uses them.
+   The site follows the visitor's device: dark colours if the phone or computer
+   is set to dark mode, light colours otherwise. The switch in the top bar is a
+   checkbox (#theme): when it is ticked, the site shows the other mode.
+   No JavaScript. (Each set of colours appears twice below; change both.)
    ========================================================================== */
 
-/* ---------- Colours: dark (default) ---------- */
+/* ---------- Colours: dark (device in dark mode) ---------- */
 :root {
   color-scheme: dark;
   --bg: #1e1f24;       /* intro block */
@@ -16,8 +18,8 @@
   --line: #34363d;     /* thin lines */
 }
 
-/* ---------- Colours: light (when the switch is on) ---------- */
-:root:has(#light:checked) {
+/* ---------- Colours: light (dark device, switch ticked) ---------- */
+:root:has(#theme:checked) {
   color-scheme: light;
   --bg: #ffffff;
   --bg-alt: #f7f7f7;
@@ -25,6 +27,30 @@
   --muted: #6b6b6b;
   --accent: #1565c0;
   --line: #e3e3e3;
+}
+
+@media (prefers-color-scheme: light) {
+  /* ---------- Colours: light (device in light mode) ---------- */
+  :root {
+    color-scheme: light;
+    --bg: #ffffff;
+    --bg-alt: #f7f7f7;
+    --ink: #2b2b2b;
+    --muted: #6b6b6b;
+    --accent: #1565c0;
+    --line: #e3e3e3;
+  }
+
+  /* ---------- Colours: dark (light device, switch ticked) ---------- */
+  :root:has(#theme:checked) {
+    color-scheme: dark;
+    --bg: #1e1f24;
+    --bg-alt: #25272d;
+    --ink: #e3e3e6;
+    --muted: #a2a5ad;
+    --accent: #8ab4f8;
+    --line: #34363d;
+  }
 }
 
 /* ---------- Fonts: stored in assets/fonts, no request to Google ----------
@@ -71,7 +97,7 @@ h1, h2, h3, .topbar a { font-family: "Lora", Georgia, serif; }
 
 a { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; }
-a:focus-visible, #light:focus-visible + label, .abs-toggle:focus-visible + label { outline: 2px solid var(--accent); outline-offset: 3px; }
+a:focus-visible, #theme:focus-visible + label, .abs-toggle:focus-visible ~ .meta .abs-btn { outline: 2px solid var(--accent); outline-offset: 3px; }
 
 .wrap { max-width: 70rem; margin: 0 auto; padding: 0 1.5rem; }
 
@@ -103,8 +129,18 @@ a:focus-visible, #light:focus-visible + label, .abs-toggle:focus-visible + label
 .toggle svg { width: 18px; height: 18px; }
 /* Show the sun in dark mode (click for light), the moon in light mode */
 .to-dark { display: none; }
-:root:has(#light:checked) .to-light { display: none; }
-:root:has(#light:checked) .to-dark { display: block; }
+:root:has(#theme:checked) .to-light { display: none; }
+:root:has(#theme:checked) .to-dark { display: block; }
+@media (prefers-color-scheme: light) {
+  .to-light { display: none; }
+  .to-dark { display: block; }
+  :root:has(#theme:checked) .to-light { display: block; }
+  :root:has(#theme:checked) .to-dark { display: none; }
+}
+/* Very old browsers can't run the switch: hide it there (the site still follows the device) */
+@supports not selector(:has(a)) {
+  .theme-slot { display: none; }
+}
 
 /* ---------- Blocks: full-width bands of colour ---------- */
 .block { padding: 3.75rem 0; background: var(--bg); scroll-margin-top: 3.5rem; }
@@ -148,9 +184,11 @@ h1 { font-size: 1.9rem; font-weight: 400; margin: 0; }
   .tag:hover { background: var(--accent); color: var(--bg); text-decoration: none; }
 }
 
-/* "Abstract" button for the working papers, phones only (see the phone section below).
-   Like the dark/light switch, it is a checkbox: ticked = abstract open. On computers
-   it is hidden and every abstract shows. The JMP has no button: its abstract always shows. */
+/* "Abstract" button for every paper, phones only (see the phone section below).
+   Like the dark/light switch, it is a checkbox: ticked = abstract open. The box sits
+   just before the title in index.html, so "~" (= "comes later in the same paper")
+   can reach the abstract without newer CSS features. On computers
+   it is hidden and every abstract shows. */
 .abs-toggle, .abs-btn { display: none; }
 .abs-btn { margin-left: .4rem; color: var(--accent); cursor: pointer; user-select: none; }
 /* Small arrow drawn with two borders: points down when closed, up when open */
@@ -173,18 +211,18 @@ h1 { font-size: 1.9rem; font-weight: 400; margin: 0; }
 }
 
 /* Phones, on screen only (a printout always shows every abstract):
-   working-paper abstracts stay closed until the "Abstract" button is tapped */
+   abstracts stay closed until the "Abstract" button is tapped */
 @media screen and (max-width: 760px) {
   .abs-toggle { display: block; }
   .abs-btn { display: inline-block; }
-  .paper:has(.abs-toggle) .abstract { display: none; }
-  .paper:has(.abs-toggle:checked) .abstract { display: block; }
-  .paper:has(.abs-toggle:checked) .arrow { transform: translateY(.2em) rotate(-135deg); }
+  .abs-toggle ~ .abstract { display: none; }
+  .abs-toggle:checked ~ .abstract { display: block; }
+  .abs-toggle:checked ~ .meta .arrow { transform: translateY(.2em) rotate(-135deg); }
 }
 
 /* ---------- Printing: always light colours, no top bar ---------- */
 @media print {
-  :root, :root:has(#light:checked) {
+  :root, :root:has(#theme:checked) {
     --bg: #fff; --bg-alt: #fff; --ink: #000; --muted: #444; --accent: #000; --line: #ccc;
   }
   .topbar { display: none; }
