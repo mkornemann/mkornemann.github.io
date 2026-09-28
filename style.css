@@ -71,7 +71,7 @@ h1, h2, h3, .topbar a { font-family: "Lora", Georgia, serif; }
 
 a { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; }
-a:focus-visible, #light:focus-visible + label { outline: 2px solid var(--accent); outline-offset: 3px; }
+a:focus-visible, #light:focus-visible + label, .abs-toggle:focus-visible + label { outline: 2px solid var(--accent); outline-offset: 3px; }
 
 .wrap { max-width: 70rem; margin: 0 auto; padding: 0 1.5rem; }
 
@@ -143,7 +143,21 @@ h1 { font-size: 1.9rem; font-weight: 400; margin: 0; }
   display: inline-block; margin-top: .5rem; padding: .15rem .6rem;
   border: 1px solid var(--accent); border-radius: 3px; font-size: .88rem;
 }
-.tag:hover { background: var(--accent); color: var(--bg); text-decoration: none; }
+/* Filled on mouse-over; only on devices with a mouse, so buttons don't stay filled after a tap */
+@media (hover: hover) {
+  .tag:hover { background: var(--accent); color: var(--bg); text-decoration: none; }
+}
+
+/* "Abstract" button for the working papers, phones only (see the phone section below).
+   Like the dark/light switch, it is a checkbox: ticked = abstract open. On computers
+   it is hidden and every abstract shows. The JMP has no button: its abstract always shows. */
+.abs-toggle, .abs-btn { display: none; }
+.abs-btn { margin-left: .4rem; color: var(--accent); cursor: pointer; user-select: none; }
+/* Small arrow drawn with two borders: points down when closed, up when open */
+.arrow {
+  display: inline-block; width: .38em; height: .38em; margin: 0 .1em .18em .45em;
+  border-right: 1.5px solid; border-bottom: 1.5px solid; transform: rotate(45deg);
+}
 
 /* ---------- Phones: everything stacks ---------- */
 @media (max-width: 760px) {
@@ -156,6 +170,16 @@ h1 { font-size: 1.9rem; font-weight: 400; margin: 0; }
   .section-title { font-size: 1.7rem; margin-bottom: 1.4rem; }
   .block.alt + .block.alt .section-title { padding-top: 2.2rem; }
   .jmp h3 { font-size: 1.25rem; }
+}
+
+/* Phones, on screen only (a printout always shows every abstract):
+   working-paper abstracts stay closed until the "Abstract" button is tapped */
+@media screen and (max-width: 760px) {
+  .abs-toggle { display: block; }
+  .abs-btn { display: inline-block; }
+  .paper:has(.abs-toggle) .abstract { display: none; }
+  .paper:has(.abs-toggle:checked) .abstract { display: block; }
+  .paper:has(.abs-toggle:checked) .arrow { transform: translateY(.2em) rotate(-135deg); }
 }
 
 /* ---------- Printing: always light colours, no top bar ---------- */
